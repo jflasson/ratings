@@ -1,0 +1,53 @@
+{>"master"/}
+{<mainContent}
+			<section>
+				<h4>
+					Ratings main page
+					<br>
+
+					<!--
+					<form method='post' id='form' action='/submit'>
+						Title:
+						<input type="text" name="title">
+						<br>
+						1 Star
+						<input type="radio" id="1star" name="star">
+						2 Stars
+						<input type="radio" id="2star" name="star">
+						3 Stars
+						<input type="radio" id="3star" name="star">
+						4 Stars
+						<input type="radio" id="4star" name="star">
+						5 Stars
+						<input type="radio" id="5star" name="star">
+						<br>
+						<input type="submit" value="submit">
+					</form>
+					-->
+
+					<form method='post' id='form' action='/submit'>
+						Title:
+						<br>
+						<input type="text" name="title">
+						<br>
+						Number of stars:
+						<br>
+						<input type="text" name ="stars">
+						<br>
+						<input type="submit" value="submit">
+					</form>
+				</h4>
+
+				<script>
+					$(document).ready(function(){
+						$('#form').ajaxForm({
+							success: function(data){
+								console.log(data);
+
+							},
+							clearForm: true
+						});
+					});
+				</script>
+			</section>
+{/mainContent}
