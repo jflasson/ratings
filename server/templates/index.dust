@@ -21,6 +21,14 @@
 					<br>
 					<br>
 
+					Season:
+					<select id = "seasonselect">
+							<!-- to be populated-->
+					</select> 
+
+
+
+					<br>
 					<form method='post' id='form' action='/submit'>
 						<input type="text" name="title">
 						<br>
@@ -57,12 +65,14 @@
 								var items = data;
 								console.log("test");
 								console.log(items);
-								var select = document.getElementById('showselect')
+								var select = $('#showselect');
+								console.log(select[0])
+								select.empty();
 								for(var i = 0; i < items.length; i++){
 									var option = document.createElement("option");
 									option.text = items[i];
-									option.value = "";
-									select.add(option);
+									option.value = items[i];
+									select.append(option);
 								}
 							},	
 							clearForm: true
