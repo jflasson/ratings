@@ -8,6 +8,8 @@ var mongoose = require('mongoose');
 var request = require('request');
 mongoose.connect('mongodb://localhost/ratings')
 
+dust.config.whitespace = true;
+
 server.engine('dust', consolidate.dust);
 server.set('view engine', 'dust');
 server.set('views', __dirname + '/templates')
@@ -23,6 +25,7 @@ var ratingSchema = mongoose.Schema({
 });
 
 var Rating = mongoose.model('Rating', ratingSchema);
+var tags = [];
 
 
 server.get('/', function(request, response){
@@ -30,34 +33,35 @@ server.get('/', function(request, response){
 });
 
 
+
 server.get('/index', function(request, response){
   response.render('index');
 });
 
+
 server.post('/submit', function(request, response){
 	console.log(request.body.star);
-	var title = request.body.title;
-	var stars = request.body.star;
-	var tempRating = new Rating({title: title, stars: stars});
-	//console.log(tempRating);
+	var title = request.body.title,
+		stars = request.body.star,
+		tempRating = new Rating({title: title, stars: stars});
 	tempRating.save(function(error, doc){
-		//console.log("save error:")
-		//console.log(error);
 	});
 	response.json({status: 0});
 	response.end();
 });
 
-server.post('/submit/show', function(req, response){
+
+server.post('/submit/show', function(req, res){
 	var title = req.body.title,
 		requestString = 'http://services.tvrage.com/feeds/search.php?show=' + title;
 	console.log("Query= " + requestString);
 	request(requestString, function(error, response, body){
-		var tags = getTagContentsFromXML(body, "<name>");
+		tags = getTagContentsFromXML(body, "<name>");
 		console.log(tags);
+		res.send(tags);
 	});
-
 });
+
 
 server.listen(3000, function(){
   console.log('Listening on port 3000'); 
@@ -67,14 +71,12 @@ server.listen(3000, function(){
 var getTagContentsFromXML = function(xml, tag){
 	var contents = [],
 		tagLength = tag.length;
-		console.log(tagLength);
 	for(var i = 0; i < xml.length; i++){
 		if(xml.substring(i, i + tagLength) == tag){
-			console.log((xml.substring(i, i + tagLength)));
-			for(var j = i +tagLength + 1; j < i+xml.length; j++){
+			for(var j = i +tagLength + 1; j < xml.length; j++){
 				if(xml.substring(j, j + tagLength + 1) == "</" + tag.substring(1, tagLength)){
 					var tagFound = xml.substring(i+ tagLength, j) 
-					console.log("Tag: " + tagFound);
+					//console.log("Tag: " + tagFound);
 					contents.push(tagFound);
 					break;
 				}
@@ -83,6 +85,18 @@ var getTagContentsFromXML = function(xml, tag){
 	}
 	return contents;
 }
+
+/* This is silly
+var buildSelect = function(items){
+	var select = "<select>\n";
+	for(var item in items){
+		select.concat("<option value = " + item +">" + item +"</option>");
+		select.concat("\n");
+	}
+	select.concat("</select>");
+	return select;
+}
+*/
 
 /* Deprecated specific version
 var getShowNames = function(xml){
