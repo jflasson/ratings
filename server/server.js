@@ -26,6 +26,7 @@ var ratingSchema = mongoose.Schema({
 
 var Rating = mongoose.model('Rating', ratingSchema);
 var tags = [];
+var seasons = 0;
 
 
 server.get('/', function(request, response){
@@ -57,8 +58,11 @@ server.post('/submit/show', function(req, res){
 	console.log("Query= " + requestString);
 	request(requestString, function(error, response, body){
 		tags = getTagContentsFromXML(body, "<name>");
+		seasons = getTagContentsFromXML(body, "<seasons>");
 		console.log(tags);
-		res.send(tags);
+		console.log(seasons);
+		var data = [tags, seasons];
+		res.send(data);
 	});
 });
 

@@ -22,12 +22,13 @@
 					<br>
 
 					Season:
+					<br>
 					<select id = "seasonselect">
 							<!-- to be populated-->
 					</select> 
 
 
-
+					<br>
 					<br>
 					<form method='post' id='form' action='/submit'>
 						<input type="text" name="title">
@@ -52,6 +53,22 @@
 				</h4>
 
 				<script>
+					var showdata = {};
+					var onShowChange = function(){
+						var showselect = $('#showselect');
+						console.log(showselect.val());
+						var selected = showselect.val()
+						console.log(showdata[selected]);
+						var numseasons = showdata[selected];
+						var seasons = $('#seasonselect');
+						seasons.empty();
+						for(var i = 1; i <= numseasons; i++){
+							var option = document.createElement("option");
+							option.text = i;
+							option.value = i;
+							seasons.append(option);
+						}
+					};
 					$(document).ready(function(){
 						$('#form').ajaxForm({
 							success: function(data){
@@ -62,21 +79,22 @@
 
 						$('#show').ajaxForm({
 							success: function(data){
-								var items = data;
-								console.log("test");
-								console.log(items);
+								var titles = data[0];
 								var select = $('#showselect');
 								console.log(select[0])
 								select.empty();
-								for(var i = 0; i < items.length; i++){
+								for(var i = 0; i < titles.length; i++){
 									var option = document.createElement("option");
-									option.text = items[i];
-									option.value = items[i];
+									option.text = titles[i];
+									option.value = titles[i];
 									select.append(option);
+									showdata[titles[i]] = data[1][i];
 								}
+								onShowChange();
 							},	
 							clearForm: true
 						});
+						$('#showselect').change(onShowChange);
 					});
 				</script>
 			</section>
