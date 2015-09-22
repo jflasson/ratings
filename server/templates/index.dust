@@ -27,6 +27,13 @@
 							<!-- to be populated-->
 					</select> 
 
+					<br>
+					<br>
+
+					<button>
+						Fetch episodes
+					</button>
+
 
 					<br>
 					<br>
@@ -52,7 +59,14 @@
 					</form>
 				</h4>
 
+				<textarea>
+				</textarea>
+
 				<script>
+				console.log = function(){
+					$("textarea").html(JSON.stringify(arguments, null, 2))
+				}
+
 					var showdata = {};
 					var onShowChange = function(){
 						var showselect = $('#showselect');
@@ -69,6 +83,13 @@
 							seasons.append(option);
 						}
 					};
+
+					var onSeasonChange = function(){
+						var seasonselect = $('#seasonselect');
+						console.log(seasonselect.val());
+						console.log("Seasonchanged");
+					};
+
 					$(document).ready(function(){
 						$('#form').ajaxForm({
 							success: function(data){
@@ -95,6 +116,7 @@
 							clearForm: true
 						});
 						$('#showselect').change(onShowChange);
+						$('#seasonselect').on('change', onSeasonChange);
 					});
 				</script>
 			</section>

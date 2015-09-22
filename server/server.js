@@ -27,6 +27,7 @@ var ratingSchema = mongoose.Schema({
 var Rating = mongoose.model('Rating', ratingSchema);
 var tags = [];
 var seasons = 0;
+var showId = 0;
 
 
 server.get('/', function(request, response){
@@ -57,13 +58,21 @@ server.post('/submit/show', function(req, res){
 		requestString = 'http://services.tvrage.com/feeds/search.php?show=' + title;
 	console.log("Query= " + requestString);
 	request(requestString, function(error, response, body){
-		tags = getTagContentsFromXML(body, "<name>");
+		showIds = getTagContentsFromXML(body, "<showid>");
+		names = getTagContentsFromXML(body, "<name>");
 		seasons = getTagContentsFromXML(body, "<seasons>");
-		console.log(tags);
+		console.log(showIds)
+		console.log(names);
 		console.log(seasons);
-		var data = [tags, seasons];
+		var data = [names, seasons, showIds];
 		res.send(data);
 	});
+});
+
+server.post('/submit/episodes', function(req, res){
+
+
+
 });
 
 
